@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Tu código PIN</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f6f6f6;
+      padding: 20px;
+      color: #333;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 10px;
+      text-align: center;
+    }
+    .logo {
+      margin-bottom: 20px;
+    }
+    .pin {
+      font-size: 32px;
+      font-weight: bold;
+      background: #f0f0f0;
+      display: inline-block;
+      padding: 12px 24px;
+      margin-top: 20px;
+      border-radius: 6px;
+      color: #000;
+      letter-spacing: 6px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo">
+      <img src="https://firebasestorage.googleapis.com/v0/b/EspaciosYa-ap5jxr.firebasestorage.app/o/assets%2FFrame%2049.png?alt=media&token=196e2339-505b-424e-9517-c362bf1c939d" alt="EspaciosYa Logo" width="150" />
+    </div>
+    <h2>Tu código PIN de seguridad es:</h2>
+    <div class="pin">{{pincode}}</div>
+    <p style="margin-top: 20px;">Este código es confidencial y expira en unos minutos.</p>
+    <p>Si no lo solicitaste, por favor ignora este mensaje.</p>
+    <br>
+    <p><strong>El equipo de EspaciosYa 🐽</strong></p>
+  </div>
+</body>
+</html>
