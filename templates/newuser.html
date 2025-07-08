@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <title>Nuevo usuario registrado</title>
+  <meta charset="UTF-8">
+  <title>Nuevo usuario registrado | EspaciosYa</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #f9f9f9;
+      background: #f6f6f6;
       padding: 20px;
       color: #333;
+      line-height: 1.5;
     }
     .container {
       max-width: 600px;
@@ -16,28 +17,67 @@
       background: #ffffff;
       padding: 30px;
       border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
     .logo {
       text-align: center;
-      margin-bottom: 20px;
+      margin-bottom: 25px;
+    }
+    h2 {
+      color: #5134E8;
+      text-align: center;
+      margin-bottom: 25px;
+    }
+    .user-info {
+      background-color: #f8f8f8;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+      border-left: 4px solid #5134E8;
     }
     .highlight {
+      color: #5134E8;
       font-weight: bold;
-      color: #4CAF50;
+    }
+    .cta {
+      text-align: center;
+      margin: 25px 0;
+    }
+    .footer {
+      margin-top: 30px;
+      text-align: center;
+      color: #777;
+      font-size: 13px;
+      border-top: 1px solid #eee;
+      padding-top: 20px;
     }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="logo">
-      <img src="https://firebasestorage.googleapis.com/v0/b/EspaciosYa-ap5jxr.firebasestorage.app/o/assets%2FFrame%2049.png?alt=media&token=196e2339-505b-424e-9517-c362bf1c939d" alt="EspaciosYa Logo" width="150" />    </div>
-    <h2>Nuevo usuario registrado 🎉</h2>
-    <p>Un nuevo usuario se ha registrado en EspaciosYa:</p>
-    <p><span class="highlight">Nombre:</span> {{name}}</p>
-    <p><span class="highlight">Correo:</span> {{email}}</p>
-    <p>¡Puedes darle la bienvenida o revisar su perfil en el dashboard!</p>
-    <br />
-    <p><strong>Notificación automática</strong></p>
+      <img src="https://firebasestorage.googleapis.com/v0/b/espacios-ya-ljir89.firebasestorage.app/o/logo%2Flogoey.png?alt=media&token=067723ec-b29c-414b-9aaf-f1ded25dc62e" alt="EspaciosYa Logo" width="120" />
+    </div>
+    <h2>¡Nuevo usuario registrado! 🎉</h2>
+    
+    <p>Un nuevo miembro se ha unido a la comunidad EspaciosYa:</p>
+    
+    <div class="user-info">
+      <p><span class="highlight">Nombre:</span> {{name}}</p>
+      <p><span class="highlight">Correo electrónico:</span> {{email}}</p>
+      <p><span class="highlight">Fecha de registro:</span> {{signupDate}}</p>
+      <p><span class="highlight">Tipo de usuario:</span> {{userType}}</p>
+    </div>
+    
+    <div class="cta">
+      <p>¡Da la bienvenida al nuevo usuario o revisa su perfil en el panel de administración!</p>
+      <p><a href="{{dashboardLink}}" style="color: #5134E8; font-weight: bold;">Acceder al Dashboard →</a></p>
+    </div>
+    
+    <div class="footer">
+      <p>© 2025 EspaciosYa. Todos los derechos reservados.</p>
+      <p><small>Notificación automática - No responder este mensaje</small></p>
+    </div>
   </div>
 </body>
 </html>

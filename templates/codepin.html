@@ -2,13 +2,14 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Tu código PIN</title>
+  <title>Tu código de verificación | EspaciosYa</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       background: #f6f6f6;
       padding: 20px;
       color: #333;
+      line-height: 1.5;
     }
     .container {
       max-width: 600px;
@@ -17,34 +18,67 @@
       padding: 30px;
       border-radius: 10px;
       text-align: center;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
     .logo {
-      margin-bottom: 20px;
+      margin-bottom: 25px;
+    }
+    .pin-container {
+      margin: 25px 0;
     }
     .pin {
-      font-size: 32px;
+      font-size: 36px;
       font-weight: bold;
-      background: #f0f0f0;
+      background: #f8f8f8;
       display: inline-block;
-      padding: 12px 24px;
-      margin-top: 20px;
-      border-radius: 6px;
-      color: #000;
-      letter-spacing: 6px;
+      padding: 15px 30px;
+      border-radius: 8px;
+      color: #5134E8;
+      letter-spacing: 8px;
+      border: 1px dashed #5134E8;
+    }
+    .note {
+      background-color: #f0f7ff;
+      padding: 15px;
+      border-radius: 8px;
+      margin: 25px 0;
+      font-size: 14px;
+    }
+    .highlight {
+      color: #5134E8;
+      font-weight: bold;
+    }
+    .footer {
+      margin-top: 30px;
+      color: #777;
+      font-size: 13px;
     }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="logo">
-      <img src="https://firebasestorage.googleapis.com/v0/b/EspaciosYa-ap5jxr.firebasestorage.app/o/assets%2FFrame%2049.png?alt=media&token=196e2339-505b-424e-9517-c362bf1c939d" alt="EspaciosYa Logo" width="150" />
+      <img src="https://firebasestorage.googleapis.com/v0/b/espacios-ya-ljir89.firebasestorage.app/o/logo%2Flogoey.png?alt=media&token=067723ec-b29c-414b-9aaf-f1ded25dc62e" alt="EspaciosYa Logo" width="120" />
     </div>
-    <h2>Tu código PIN de seguridad es:</h2>
-    <div class="pin">{{pincode}}</div>
-    <p style="margin-top: 20px;">Este código es confidencial y expira en unos minutos.</p>
-    <p>Si no lo solicitaste, por favor ignora este mensaje.</p>
-    <br>
-    <p><strong>El equipo de EspaciosYa 🐽</strong></p>
+    <h2>Tu código de verificación de EspaciosYa</h2>
+    
+    <div class="pin-container">
+      <div class="pin">{{pincode}}</div>
+    </div>
+    
+    <p>Utiliza este código para completar tu proceso de verificación.</p>
+    
+    <div class="note">
+      <p>🔒 <strong>Importante:</strong> Este código es confidencial y expira en 10 minutos.</p>
+      <p>⚠️ No lo compartas con nadie.</p>
+    </div>
+    
+    <p>Si no solicitaste este código, por favor <span class="highlight">ignora este mensaje</span> o contacta a nuestro equipo de soporte.</p>
+    
+    <div class="footer">
+      <p><strong>El equipo de EspaciosYa</strong> 🚀</p>
+      <p>© 2025 EspaciosYa. Todos los derechos reservados.</p>
+    </div>
   </div>
 </body>
 </html>

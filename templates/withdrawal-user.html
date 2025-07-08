@@ -2,25 +2,114 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Solicitud de retiro recibida</title>
+  <title>Confirmación de Retiro | EspaciosYa</title>
   <style>
-    body { font-family: Arial, sans-serif; background-color: #f2f2f2; padding: 20px; }
-    .container {
-      background-color: #ffffff; padding: 30px;
-      border-radius: 8px; max-width: 600px; margin: auto; color: #333;
+    body {
+      font-family: Arial, sans-serif;
+      background: #f6f6f6;
+      padding: 20px;
+      color: #333;
+      line-height: 1.5;
     }
-    .logo { text-align: center; margin-bottom: 20px; }
-    .footer { margin-top: 30px; font-size: 12px; color: #777; text-align: center; }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .logo {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+    h2 {
+      color: #5134E8;
+      text-align: center;
+      margin-bottom: 25px;
+    }
+    .confirmation-badge {
+      background-color: #e8f5e9;
+      color: #2e7d32;
+      padding: 10px;
+      border-radius: 6px;
+      text-align: center;
+      margin-bottom: 25px;
+      font-weight: bold;
+    }
+    .withdrawal-details {
+      background-color: #f8f8f8;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+      border-left: 4px solid #5134E8;
+    }
+    .detail-row {
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .highlight {
+      color: #5134E8;
+      font-weight: bold;
+    }
+    .processing-time {
+      font-style: italic;
+      color: #666;
+      margin: 20px 0;
+      text-align: center;
+    }
+    .footer {
+      margin-top: 30px;
+      text-align: center;
+      color: #777;
+      font-size: 13px;
+      border-top: 1px solid #eee;
+      padding-top: 20px;
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="logo">
-      <img src="https://firebasestorage.googleapis.com/v0/b/EspaciosYa-ap5jxr.firebasestorage.app/o/assets%2FFrame%2049.png?alt=media&token=196e2339-505b-424e-9517-c362bf1c939d" alt="EspaciosYa Logo" width="150" />    </div>
+      <img src="https://firebasestorage.googleapis.com/v0/b/espacios-ya-ljir89.firebasestorage.app/o/logo%2Flogoey.png?alt=media&token=067723ec-b29c-414b-9aaf-f1ded25dc62e" alt="EspaciosYa Logo" width="120" />
+    </div>
+    
+    <div class="confirmation-badge">✓ Solicitud de retiro recibida</div>
+    
     <h2>Hola {{userName}} 👋</h2>
-    <p>Tu solicitud de retiro de <strong>${{amount}}</strong> ha sido recibida correctamente.</p>
-    <p>Estamos procesando tu solicitud. Recibirás una notificación una vez el retiro esté disponible.</p>
-    <p>Gracias por ser parte de la comunidad EspaciosYa</p>
+    
+    <div class="withdrawal-details">
+      <div class="detail-row">
+        <span>Monto solicitado:</span>
+        <span class="highlight">${{amount}}</span>
+      </div>
+      <div class="detail-row">
+        <span>Método de pago:</span>
+        <span>{{paymentMethod}}</span>
+      </div>
+      <div class="detail-row">
+        <span>Fecha solicitud:</span>
+        <span>{{requestDate}}</span>
+      </div>
+      <div class="detail-row">
+        <span>Referencia:</span>
+        <span>#{{transactionId}}</span>
+      </div>
+    </div>
+    
+    <p style="text-align: center;">Hemos recibido tu solicitud correctamente y está siendo procesada.</p>
+    
+    <div class="processing-time">
+      <p>⌛ Tiempo estimado de procesamiento: 1-3 días hábiles</p>
+    </div>
+    
+    <p style="text-align: center;">Recibirás una notificación cuando el dinero esté disponible en tu cuenta.</p>
+    
+    <div class="footer">
+      <p>© 2025 EspaciosYa. Todos los derechos reservados.</p>
+      <p><small>Si tienes alguna duda, contáctanos en <a href="mailto:soporte@espaciosya.app" style="color:#5134E8;">soporte@espaciosya.app</a></small></p>
+    </div>
   </div>
 </body>
 </html>

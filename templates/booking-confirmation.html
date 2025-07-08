@@ -1,69 +1,91 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Confirmación de Reserva</title>
+  <meta charset="UTF-8">
+  <title>Confirmación de Reserva | EspaciosYa</title>
   <style>
     body {
       font-family: Arial, sans-serif;
+      background: #f6f6f6;
       color: #333;
-      background-color: #f8f8f8;
       padding: 20px;
+      line-height: 1.5;
     }
     .container {
       max-width: 600px;
       margin: auto;
-      background-color: #fff;
+      background: #fff;
       padding: 30px;
       border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    h1 {
-      color: #009688;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
     .logo {
-      text-align: center;
       margin-bottom: 20px;
+      text-align: center;
     }
-    .logo img {
-      width: 120px;
+    h1 {
+      color: #5134E8;
+      text-align: center;
+      font-size: 24px;
+      margin-bottom: 25px;
+    }
+    .highlight {
+      color: #5134E8;
+      font-weight: bold;
     }
     .details {
-      background-color: #f2f2f2;
-      padding: 15px;
-      border-radius: 5px;
-      margin-top: 20px;
+      background-color: #f8f8f8;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 25px 0;
+      border-left: 4px solid #5134E8;
     }
     .details p {
-      margin: 5px 0;
+      margin: 12px 0;
+      font-size: 15px;
     }
     .footer {
       margin-top: 30px;
       text-align: center;
-      color: #999;
-      font-size: 12px;
+      color: #777;
+      font-size: 13px;
+      border-top: 1px solid #eee;
+      padding-top: 20px;
+    }
+    .support {
+      margin-top: 25px;
+      padding: 15px;
+      background-color: #f0f7ff;
+      border-radius: 6px;
+      text-align: center;
     }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="logo">
-      <img src="https://yourdomain.com/logo.png" alt="Logo EspaciosYa">
+      <img src="https://firebasestorage.googleapis.com/v0/b/espacios-ya-ljir89.firebasestorage.app/o/logo%2Flogoey.png?alt=media&token=067723ec-b29c-414b-9aaf-f1ded25dc62e" alt="EspaciosYa Logo" width="120" />
     </div>
-    <h1>¡Tu reserva ha sido confirmada, {{userName}}!</h1>
-    <p>Gracias por confiar en EspaciosYa. Estos son los detalles de tu reserva:</p>
+    <h1>¡Reserva confirmada, {{userName}}! 🎉</h1>
+    <p>Gracias por reservar con <span class="highlight">EspaciosYa</span>. Tu espacio está listo para que vivas una experiencia extraordinaria.</p>
 
     <div class="details">
-      <p><strong>Check-in:</strong> {{checkInDate}}</p>
-      <p><strong>Check-out:</strong> {{checkOutDate}}</p>
-      <p><strong>Total pagado:</strong> ${{totalPrice}}</p>
+      <p><strong>📌 Espacio reservado:</strong> {{spaceName}}</p>
+      <p><strong>📍 Dirección:</strong> {{spaceAddress}}</p>
+      <p><strong>📅 Fecha:</strong> {{eventDate}}</p>
+      <p><strong>⏰ Horario:</strong> {{startTime}} - {{endTime}}</p>
+      <p><strong>👥 Capacidad:</strong> {{capacity}} personas</p>
+      <p><strong>💰 Total:</strong> ${{totalPrice}} ({{paymentMethod}})</p>
+      <p><strong>📝 Número de reserva:</strong> {{bookingNumber}}</p>
     </div>
 
-    <p>¡Te esperamos!</p>
+    <div class="support">
+      <p>¿Necesitas ayuda? Contáctanos en <a href="mailto:soporte@espaciosya.app" style="color:#5134E8;">soporte@espaciosya.app</a> o al {{supportPhone}}.</p>
+    </div>
 
     <div class="footer">
-      © 2025 EspaciosYa. Todos los derechos reservados.
+      <p>© 2025 EspaciosYa. Todos los derechos reservados.</p>
+      <p><small>Esta reserva está sujeta a nuestros <a href="https://www.espaciosya.app/terms" style="color:#5134E8; text-decoration:none;">Términos y Condiciones</a></small></p>
     </div>
   </div>
 </body>

@@ -1,13 +1,100 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8" />
-    <title>Pago en tu Meta</title>
-  </head>
-  <body style="font-family: Arial, sans-serif;">
-    <div style="max-width: 600px; margin: auto; padding: 20px;">
-      <img src="https://firebasestorage.googleapis.com/v0/b/EspaciosYa-ap5jxr.firebasestorage.app/o/assets%2FFrame%2049.png?alt=media&token=196e2339-505b-424e-9517-c362bf1c939d" alt="EspaciosYa Logo" width="150" />      <p><strong>{{payerName}}</strong> ha contribuido <strong>${{amount}}</strong> a la meta <strong>{{goalTitle}}</strong>.</p>
-      <p>Gracias por usar EspaciosYa 🐽</p>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Confirmación de Pago | EspaciosYa</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f6f6f6;
+      padding: 20px;
+      color: #333;
+      line-height: 1.5;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .logo {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+    h2 {
+      color: #5134E8;
+      text-align: center;
+      margin-bottom: 25px;
+    }
+    .payment-details {
+      background-color: #f8f8f8;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+      border-left: 4px solid #5134E8;
+    }
+    .highlight {
+      color: #5134E8;
+      font-weight: bold;
+    }
+    .payment-info {
+      margin: 15px 0;
+    }
+    .footer {
+      margin-top: 30px;
+      text-align: center;
+      color: #777;
+      font-size: 13px;
+      border-top: 1px solid #eee;
+      padding-top: 20px;
+    }
+    .success-badge {
+      background-color: #e8f5e9;
+      color: #2e7d32;
+      padding: 8px 15px;
+      border-radius: 20px;
+      display: inline-block;
+      margin-bottom: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo">
+      <img src="https://firebasestorage.googleapis.com/v0/b/espacios-ya-ljir89.firebasestorage.app/o/logo%2Flogoey.png?alt=media&token=067723ec-b29c-414b-9aaf-f1ded25dc62e" alt="EspaciosYa Logo" width="120" />
     </div>
-  </body>
+    
+    <div class="success-badge">✔ Pago recibido con éxito</div>
+    
+    <h2>Nueva contribución recibida</h2>
+    
+    <div class="payment-details">
+      <div class="payment-info">
+        <p><span class="highlight">Contribuyente:</span> {{payerName}}</p>
+      </div>
+      <div class="payment-info">
+        <p><span class="highlight">Monto:</span> ${{amount}}</p>
+      </div>
+      <div class="payment-info">
+        <p><span class="highlight">Para la reserva:</span> {{reservationTitle}}</p>
+      </div>
+      <div class="payment-info">
+        <p><span class="highlight">Fecha del pago:</span> {{paymentDate}}</p>
+      </div>
+      <div class="payment-info">
+        <p><span class="highlight">Método de pago:</span> {{paymentMethod}}</p>
+      </div>
+    </div>
+    
+    <p style="text-align: center;">El pago se ha procesado correctamente y la reserva está confirmada.</p>
+    
+    <div class="footer">
+      <p>© 2025 EspaciosYa. Todos los derechos reservados.</p>
+      <p><small>Para cualquier consulta, contacta a <a href="mailto:soporte@espaciosya.app" style="color:#5134E8;">soporte@espaciosya.app</a></small></p>
+    </div>
+  </div>
+</body>
 </html>
