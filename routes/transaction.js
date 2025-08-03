@@ -7,52 +7,38 @@ router.post('/transaction', (req, res) => {
     const {
       orderId,
       create_date,
-      amount,
+      total_price,
       payment_method,
       type,
       userRef,
-      bookingRef,
-      day,
-      month,
-      year,
-      mode,
-      // Campos específicos de booking:
       listing_id,
       guest_id,
       check_in,
       check_out,
-      total_price,
-      status
+      status,
+      booking_per,
+      date_reserved
     } = req.body;
 
     if (!orderId) {
       return res.status(400).json({ message: 'Falta orderId' });
     }
 
-    // Construir el objeto de datos a guardar
     const tempData = {
+      orderId,
       create_date,
-      amount,
-      status: 'P', // transacción pendiente
+      total_price,
       payment_method,
       type,
       userRef,
-      bookingRef,
-      day,
-      month,
-      year,
-      mode
+      listing_id,
+      guest_id,
+      check_in,
+      check_out,
+      booking_status: status,
+      booking_per,
+      date_reserved
     };
-
-    // ✅ Guardar campos de booking si existen
-    if (mode && String(mode).toLowerCase() === 'booking') {
-      tempData.listing_id = listing_id;
-      tempData.guest_id = guest_id;
-      tempData.check_in = check_in;
-      tempData.check_out = check_out;
-      tempData.total_price = total_price;
-      tempData.booking_status = status;
-    }
 
     saveTempTransaction(orderId, tempData);
 
@@ -66,5 +52,6 @@ router.post('/transaction', (req, res) => {
 });
 
 module.exports = router;
+
 
 
