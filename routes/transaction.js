@@ -17,7 +17,8 @@ router.post('/transaction', (req, res) => {
       checkout,
       status,
       booking_per,
-      date_reserved
+      date_reserved,
+      confirmation_code // ✅ <-- incluir este campo
     } = req.body;
 
     if (!orderId) {
@@ -37,7 +38,8 @@ router.post('/transaction', (req, res) => {
       checkout,
       booking_status: status,
       booking_per,
-      date_reserved
+      date_reserved,
+      confirmation_code // ✅ <-- guardar en memoria
     };
 
     saveTempTransaction(orderId, tempData);
@@ -52,6 +54,7 @@ router.post('/transaction', (req, res) => {
 });
 
 module.exports = router;
+
 
 
 
