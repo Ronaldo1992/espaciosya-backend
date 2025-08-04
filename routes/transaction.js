@@ -11,10 +11,10 @@ router.post('/transaction', (req, res) => {
       payment_method,
       type,
       userRef,
-      listing_id,
-      guest_id,
-      check_in,
-      check_out,
+      listingRef,
+      guest,
+      checkin,
+      checkout,
       status,
       booking_per,
       date_reserved
@@ -31,10 +31,10 @@ router.post('/transaction', (req, res) => {
       payment_method,
       type,
       userRef,
-      listing_id,
-      guest_id,
-      check_in,
-      check_out,
+      listingRef,
+      guest,
+      checkin,
+      checkout,
       booking_status: status,
       booking_per,
       date_reserved
@@ -52,6 +52,7 @@ router.post('/transaction', (req, res) => {
 });
 
 module.exports = router;
+
 
 
 

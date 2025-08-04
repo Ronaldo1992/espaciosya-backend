@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { db } = require('../firebase');
+const { db } = require('../firebase');  
 const { sendEmail } = require('../utils/emailService');
 
 const {
@@ -39,7 +39,7 @@ router.get('/ipn-handler', async (req, res) => {
 
     if (
       !data.userRef ||
-      !data.listing_id ||
+      !data.listingRef ||
       !data.check_in ||
       !data.check_out ||
       !data.total_price
@@ -58,7 +58,7 @@ router.get('/ipn-handler', async (req, res) => {
       payment_method: String(data.payment_method),
       type: String(data.type),
       userRef: db.doc(`users/${String(data.userRef).trim()}`),
-      listingRef: db.doc(`listings/${String(data.listing_id).trim()}`),
+      listingRef: db.doc(`listings/${String(data.listingRef).trim()}`),
       date_reserved: data.date_reserved ? new Date(data.date_reserved) : new Date(),
       checkin: new Date(data.check_in),
       checkout: new Date(data.check_out),
