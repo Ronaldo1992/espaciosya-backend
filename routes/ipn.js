@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const { db } = require('../firebase');  
+const { db } = require('../firebase');
 const { sendEmail } = require('../utils/emailService');
 
 const {
   getTempTransaction,
-  deleteTempTransaction
+  updateTransactionStatus
 } = require('../memoryStore');
 
 router.get('/ipn-handler', async (req, res) => {
@@ -19,12 +19,14 @@ router.get('/ipn-handler', async (req, res) => {
       });
     }
 
+    // Si no es éxito, actualizar estado en memoria y salir
     if (status !== 'E') {
-      deleteTempTransaction(orderId);
+      updateTransactionStatus(orderId, status);
       console.log(`❌ Orden ${orderId} rechazada/cancelada/expirada (${status}).`);
       return res.status(200).json({ success: true });
     }
 
+    // Buscar transacción temporal
     const entry = getTempTransaction(orderId);
 
     if (!entry) {
@@ -37,6 +39,7 @@ router.get('/ipn-handler', async (req, res) => {
 
     const data = entry.data;
 
+    // Validar datos mínimos necesarios
     if (
       !data.userRef ||
       !data.listingRef ||
@@ -51,8 +54,10 @@ router.get('/ipn-handler', async (req, res) => {
       });
     }
 
+    // Construir booking
     const bookingData = {
-      orderId: String(orderId),
+      orderID: String(orderId),
+      confirmation_code: data.confirmation_code,
       create_date: new Date(data.create_date),
       total_price: parseFloat(data.total_price),
       payment_method: String(data.payment_method),
@@ -64,57 +69,59 @@ router.get('/ipn-handler', async (req, res) => {
       checkout: new Date(data.checkout),
       guest: parseInt(data.guest, 10) || 1,
       booking_per: data.booking_per || 'daily',
-      status: data.booking_status || 'Confirmed'
+      status: 'Complete'
     };
 
+    // Guardar booking en Firestore
     await db.collection('bookings').doc(orderId).set(bookingData);
-
-// Obtener datos del usuario para el correo
-try {
-  const userSnap = await db.doc(`users/${String(data.userRef).trim()}`).get();
-
-  if (userSnap.exists) {
-    const user = userSnap.data();
-    const userEmail = user.email;
-    const userName = user.displayName || 'Usuario';
-
-    const emailContext = {
-      userName,
-      amount: parseFloat(data.total_price).toFixed(2),
-      check_in: data.check_in,
-      check_out: data.check_out
-    };
-
-    // 📧 Enviar correo al usuario
-    if (userEmail) {
-      await sendEmail({
-        recipients: userEmail,
-        templateType: 'booking-confirmation',
-        subject: '✅ ¡Tu reserva ha sido confirmada!',
-        context: emailContext
-      });
-      console.log(`📧 Email enviado al usuario ${userEmail}`);
-    }
-
-    // 📧 Enviar correo al admin
-    const adminEmail = 'rombar24@gmail.com'; // <-- CAMBIA esto por el correo real de admin
-    await sendEmail({
-      recipients: adminEmail,
-      templateType: 'booking-confirmation',
-      subject: `📥 Nueva reserva confirmada - ${userName}`,
-      context: emailContext
-    });
-    console.log(`📧 Email enviado al administrador`);
-  }
-
-} catch (emailErr) {
-  console.warn('⚠️ Error enviando correos:', emailErr);
-}
-
-
     console.log('🎉 Booking creado con éxito:', bookingData);
 
-    deleteTempTransaction(orderId);
+    // Actualizar el estado real (de Yappy) en memoria
+    updateTransactionStatus(orderId, status); // ← 'E', 'X', etc.
+
+    // Enviar correos
+    try {
+      const userSnap = await db.doc(`users/${String(data.userRef).trim()}`).get();
+
+      if (userSnap.exists) {
+        const user = userSnap.data();
+        const userEmail = user.email;
+        const userName = user.displayName || 'Usuario';
+
+        const emailContext = {
+          userName,
+          amount: parseFloat(data.total_price).toFixed(2),
+          check_in: data.checkin,
+          check_out: data.checkout,
+          confirmation_code: data.confirmation_code
+        };
+
+        // Usuario
+        if (userEmail) {
+          await sendEmail({
+            recipients: userEmail,
+            templateType: 'booking-confirmation',
+            subject: '✅ ¡Tu reserva ha sido confirmada!',
+            context: emailContext
+          });
+          console.log(`📧 Email enviado al usuario ${userEmail}`);
+        }
+
+        // Admin
+        const adminEmail = 'rombar24@gmail.com';
+        await sendEmail({
+          recipients: adminEmail,
+          templateType: 'booking-confirmation',
+          subject: `📥 Nueva reserva confirmada - ${userName}`,
+          context: emailContext
+        });
+        console.log(`📧 Email enviado al administrador`);
+      }
+
+    } catch (emailErr) {
+      console.warn('⚠️ Error enviando correos:', emailErr);
+    }
+
     return res.json({ success: true });
 
   } catch (error) {
