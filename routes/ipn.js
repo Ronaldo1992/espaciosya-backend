@@ -40,8 +40,8 @@ router.get('/ipn-handler', async (req, res) => {
     if (
       !data.userRef ||
       !data.listingRef ||
-      !data.check_in ||
-      !data.check_out ||
+      !data.checkin ||
+      !data.checkout ||
       !data.total_price
     ) {
       console.warn(`⚠️ Datos incompletos para booking con orderId ${orderId}`);
@@ -60,8 +60,8 @@ router.get('/ipn-handler', async (req, res) => {
       userRef: db.doc(`users/${String(data.userRef).trim()}`),
       listingRef: db.doc(`listings/${String(data.listingRef).trim()}`),
       date_reserved: data.date_reserved ? new Date(data.date_reserved) : new Date(),
-      checkin: new Date(data.check_in),
-      checkout: new Date(data.check_out),
+      checkin: new Date(data.checkin),
+      checkout: new Date(data.checkout),
       guest: parseInt(data.guest, 10) || 1,
       booking_per: data.booking_per || 'daily',
       status: data.booking_status || 'Confirmed'
