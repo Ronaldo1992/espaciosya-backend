@@ -74,7 +74,7 @@ router.get('/ipn-handler', async (req, res) => {
       checkout: new Date(data.checkout),
       guest: parseInt(data.guest, 10) || 1,
       booking_per: data.booking_per || 'daily',
-      status: 'Complete'
+      status: 'Active'
     };
 
     // ✅ Crear booking en Firestore con ID aleatorio
