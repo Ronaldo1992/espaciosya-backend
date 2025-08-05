@@ -2,11 +2,17 @@ const express = require('express');
 const router = express.Router();
 const { db } = require('../firebase');
 const { sendEmail } = require('../utils/emailService');
+const { getTempTransaction, updateTransactionStatus } = require('../memoryStore');
 
-const {
-  getTempTransaction,
-  updateTransactionStatus
-} = require('../memoryStore');
+// 🔁 Función para generar ID aleatorio de 20 caracteres
+function generateFirestoreId(length = 20) {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let id = '';
+  for (let i = 0; i < length; i++) {
+    id += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return id;
+}
 
 router.get('/ipn-handler', async (req, res) => {
   try {
@@ -19,14 +25,12 @@ router.get('/ipn-handler', async (req, res) => {
       });
     }
 
-    // Si el estado no es exitoso, solo actualizar memoria y salir
     if (status !== 'E') {
       updateTransactionStatus(orderId, status);
       console.log(`❌ Orden ${orderId} rechazada/cancelada/expirada (${status}).`);
       return res.status(200).json({ success: true });
     }
 
-    // Buscar transacción temporal
     const entry = getTempTransaction(orderId);
 
     if (!entry) {
@@ -39,7 +43,6 @@ router.get('/ipn-handler', async (req, res) => {
 
     const data = entry.data;
 
-    // Validar datos mínimos necesarios
     if (
       !data.userRef ||
       !data.listingRef ||
@@ -54,9 +57,11 @@ router.get('/ipn-handler', async (req, res) => {
       });
     }
 
-    // Construir el objeto de reserva
+    // 🔐 Generar ID único para el nuevo booking
+    const bookingId = generateFirestoreId();
+
     const bookingData = {
-      orderID: String(orderId),
+      orderID: String(orderId), // orderId original como campo
       confirmation_code: data.confirmation_code,
       create_date: new Date(data.create_date),
       total_price: parseFloat(data.total_price),
@@ -69,17 +74,17 @@ router.get('/ipn-handler', async (req, res) => {
       checkout: new Date(data.checkout),
       guest: parseInt(data.guest, 10) || 1,
       booking_per: data.booking_per || 'daily',
-      status: 'Complete' // ← Siempre marcar como completado en Firestore
+      status: 'Complete'
     };
 
-    // Guardar reserva
-    await db.collection('bookings').doc(orderId).set(bookingData);
+    // ✅ Crear booking en Firestore con ID aleatorio
+    await db.collection('bookings').doc(bookingId).set(bookingData);
     console.log('🎉 Booking creado con éxito:', bookingData);
 
-    // Actualizar el estado de memoria con el original de Yappy (E, R, etc.)
+    // ✅ Actualizar status en memoria (para check-transaction)
     updateTransactionStatus(orderId, status);
 
-    // Enviar correos
+    // 📧 Envío de correos
     try {
       const userSnap = await db.doc(`users/${String(data.userRef).trim()}`).get();
 
@@ -114,7 +119,7 @@ router.get('/ipn-handler', async (req, res) => {
           bookingNumber: data.confirmation_code
         };
 
-        // Usuario
+        // ✉️ Correo al usuario
         if (userEmail) {
           await sendEmail({
             recipients: userEmail,
@@ -125,7 +130,7 @@ router.get('/ipn-handler', async (req, res) => {
           console.log(`📧 Email enviado al usuario ${userEmail}`);
         }
 
-        // Admin
+        // ✉️ Correo al administrador
         const adminEmail = 'rombar24@gmail.com';
         await sendEmail({
           recipients: adminEmail,
@@ -152,5 +157,6 @@ router.get('/ipn-handler', async (req, res) => {
 });
 
 module.exports = router;
+
 
 
