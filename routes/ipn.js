@@ -14,6 +14,11 @@ function generateFirestoreId(length = 20) {
   return id;
 }
 
+// 🔁 Función para validar fecha
+function isValidDate(d) {
+  return d instanceof Date && !isNaN(d);
+}
+
 router.get('/ipn-handler', async (req, res) => {
   try {
     const { orderId, status } = req.query;
@@ -57,11 +62,10 @@ router.get('/ipn-handler', async (req, res) => {
       });
     }
 
-    // 🔐 Generar ID único para el nuevo booking
     const bookingId = generateFirestoreId();
 
     const bookingData = {
-      orderID: String(orderId), // orderId original como campo
+      orderID: String(orderId),
       confirmation_code: data.confirmation_code,
       create_date: new Date(data.create_date),
       total_price: parseFloat(data.total_price),
@@ -74,17 +78,15 @@ router.get('/ipn-handler', async (req, res) => {
       checkout: new Date(data.checkout),
       guest: parseInt(data.guest, 10) || 1,
       booking_per: data.booking_per || 'daily',
-      status: 'Active'
+      status: 'Complete'
     };
 
-    // ✅ Crear booking en Firestore con ID aleatorio
     await db.collection('bookings').doc(bookingId).set(bookingData);
     console.log('🎉 Booking creado con éxito:', bookingData);
 
-    // ✅ Actualizar status en memoria (para check-transaction)
     updateTransactionStatus(orderId, status);
 
-    // 📧 Envío de correos
+    // ✉️ Preparar y enviar correos
     try {
       const userSnap = await db.doc(`users/${String(data.userRef).trim()}`).get();
 
@@ -96,30 +98,42 @@ router.get('/ipn-handler', async (req, res) => {
         const checkinDate = new Date(data.checkin);
         const checkoutDate = new Date(data.checkout);
 
+        const eventDate = isValidDate(checkinDate)
+          ? checkinDate.toLocaleDateString('es-PA', {
+              weekday: 'long',
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric'
+            })
+          : 'Fecha no disponible';
+
+        const startTime = isValidDate(checkinDate)
+          ? checkinDate.toLocaleTimeString('es-PA', {
+              hour: '2-digit',
+              minute: '2-digit'
+            })
+          : 'Inicio desconocido';
+
+        const endTime = isValidDate(checkoutDate)
+          ? checkoutDate.toLocaleTimeString('es-PA', {
+              hour: '2-digit',
+              minute: '2-digit'
+            })
+          : 'Fin desconocido';
+
         const emailContext = {
           userName,
           spaceName: data.spaceName || 'Espacio reservado',
-          eventDate: checkinDate.toLocaleDateString('es-PA', {
-            weekday: 'long',
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-          }),
-          startTime: checkinDate.toLocaleTimeString('es-PA', {
-            hour: '2-digit',
-            minute: '2-digit'
-          }),
-          endTime: checkoutDate.toLocaleTimeString('es-PA', {
-            hour: '2-digit',
-            minute: '2-digit'
-          }),
+          eventDate,
+          startTime,
+          endTime,
           capacity: parseInt(data.guest, 10) || 1,
           totalPrice: parseFloat(data.total_price).toFixed(2),
           paymentMethod: data.payment_method || 'Pago',
           bookingNumber: data.confirmation_code
         };
 
-        // ✉️ Correo al usuario
+        // Usuario
         if (userEmail) {
           await sendEmail({
             recipients: userEmail,
@@ -130,7 +144,7 @@ router.get('/ipn-handler', async (req, res) => {
           console.log(`📧 Email enviado al usuario ${userEmail}`);
         }
 
-        // ✉️ Correo al administrador
+        // Admin
         const adminEmail = 'rombar24@gmail.com';
         await sendEmail({
           recipients: adminEmail,
@@ -157,6 +171,3 @@ router.get('/ipn-handler', async (req, res) => {
 });
 
 module.exports = router;
-
-
-
