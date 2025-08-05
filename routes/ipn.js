@@ -19,7 +19,7 @@ router.get('/ipn-handler', async (req, res) => {
       });
     }
 
-    // Si no es éxito, actualizar estado en memoria y salir
+    // Si el estado no es exitoso, solo actualizar memoria y salir
     if (status !== 'E') {
       updateTransactionStatus(orderId, status);
       console.log(`❌ Orden ${orderId} rechazada/cancelada/expirada (${status}).`);
@@ -54,7 +54,7 @@ router.get('/ipn-handler', async (req, res) => {
       });
     }
 
-    // Construir booking
+    // Construir el objeto de reserva
     const bookingData = {
       orderID: String(orderId),
       confirmation_code: data.confirmation_code,
@@ -69,15 +69,15 @@ router.get('/ipn-handler', async (req, res) => {
       checkout: new Date(data.checkout),
       guest: parseInt(data.guest, 10) || 1,
       booking_per: data.booking_per || 'daily',
-      status: 'Complete'
+      status: 'Complete' // ← Siempre marcar como completado en Firestore
     };
 
-    // Guardar booking en Firestore
+    // Guardar reserva
     await db.collection('bookings').doc(orderId).set(bookingData);
     console.log('🎉 Booking creado con éxito:', bookingData);
 
-    // Actualizar el estado real (de Yappy) en memoria
-    updateTransactionStatus(orderId, status); // ← 'E', 'X', etc.
+    // Actualizar el estado de memoria con el original de Yappy (E, R, etc.)
+    updateTransactionStatus(orderId, status);
 
     // Enviar correos
     try {
@@ -88,12 +88,30 @@ router.get('/ipn-handler', async (req, res) => {
         const userEmail = user.email;
         const userName = user.displayName || 'Usuario';
 
+        const checkinDate = new Date(data.checkin);
+        const checkoutDate = new Date(data.checkout);
+
         const emailContext = {
           userName,
-          amount: parseFloat(data.total_price).toFixed(2),
-          check_in: data.checkin,
-          check_out: data.checkout,
-          confirmation_code: data.confirmation_code
+          spaceName: data.spaceName || 'Espacio reservado',
+          eventDate: checkinDate.toLocaleDateString('es-PA', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+          }),
+          startTime: checkinDate.toLocaleTimeString('es-PA', {
+            hour: '2-digit',
+            minute: '2-digit'
+          }),
+          endTime: checkoutDate.toLocaleTimeString('es-PA', {
+            hour: '2-digit',
+            minute: '2-digit'
+          }),
+          capacity: parseInt(data.guest, 10) || 1,
+          totalPrice: parseFloat(data.total_price).toFixed(2),
+          paymentMethod: data.payment_method || 'Pago',
+          bookingNumber: data.confirmation_code
         };
 
         // Usuario
@@ -134,4 +152,5 @@ router.get('/ipn-handler', async (req, res) => {
 });
 
 module.exports = router;
+
 

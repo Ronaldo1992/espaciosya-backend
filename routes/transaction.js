@@ -18,7 +18,8 @@ router.post('/transaction', (req, res) => {
       status,
       booking_per,
       date_reserved,
-      confirmation_code // ✅ <-- incluir este campo
+      confirmation_code,
+      spaceName // ✅ nuevo campo
     } = req.body;
 
     if (!orderId) {
@@ -39,7 +40,8 @@ router.post('/transaction', (req, res) => {
       booking_status: status,
       booking_per,
       date_reserved,
-      confirmation_code // ✅ <-- guardar en memoria
+      confirmation_code,
+      spaceName // ✅ se guarda en memoria, pero no en Firestore
     };
 
     saveTempTransaction(orderId, tempData);
@@ -54,6 +56,8 @@ router.post('/transaction', (req, res) => {
 });
 
 module.exports = router;
+
+
 
 
 
